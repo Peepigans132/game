@@ -147,6 +147,7 @@ function ClickableImages(): JSX.Element {
   );
 }
 
+
 function GameDetails() {
   const location = useLocation();
   const game = location.state?.game;
