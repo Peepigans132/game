@@ -1,13 +1,13 @@
-/* Center the main container and add a border */
 .main-container {
-  max-width: 1200px; /* Adjust this value to control width */
-  margin: 0 auto; /* Centers the content */
-  border: 3px solid black; /* Black border around content */
-  padding: 20px; /* Adds spacing inside the border */
-  background-color: white; /* Sets background */
+  max-width: 1200px;
+  margin: 0 auto;
+  border: 5px solid black;
+  padding: 20px;
+  background-color: white;
+  overflow: hidden;
 }
 
-/* Title Styling */
+
 .title {
   font-size: 2rem;
   font-weight: bold;
@@ -16,17 +16,15 @@
   margin-bottom: 10px;
 }
 
-/* Subtitle Styling */
 .subtitle {
   font-size: 1.2rem;
   text-align: center;
   margin-bottom: 20px;
 }
 
-/* Game Images Styling */
 .game-image {
-  width: 100%; /* Make images fill their container */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 10px; /* Rounded edges */
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Adds shadow effect */
+  width: 100%;
+  height: auto;
+  border-radius: 120px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
