@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Grid";
-import "./App.css"; // ✅ Importing CSS file for styling
+import "./App.css"; 
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({
