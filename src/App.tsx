@@ -118,7 +118,7 @@ function ClickableImages(): JSX.Element {
   const allImages: Image[] = [
     { id: 1, src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg", alt: "Donkey Kong Country 2" },
     { id: 2, src: "https://upload.wikimedia.org/wikipedia/en/3/32/Super_Mario_World_Coverart.png", alt: "Super Mario World" },
-    { id: 3, src: "https://via.placeholder.com/150", alt: "The Legend of Zelda" },
+    { id: 3, src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg", alt: "The Legend of Zelda" },
     { id: 4, src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png", alt: "Mega Man X" },
   ];
 
