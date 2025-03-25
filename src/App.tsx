@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { HashRouter as Router, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route,  useNavigate,  } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,8 +13,9 @@ import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Grid";
+import "./App.css"; // ✅ Importing CSS file for styling
 
-
+// Search bar styling
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -45,7 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // ✅ Fixed paddingLeft
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
@@ -129,15 +130,15 @@ function ClickableImages(): JSX.Element {
   };
 
   return (
-    <div className="bg-green-500 min-h-screen flex flex-col items-center p-6">
+    <div className="main-container">
       <SearchAppBar />
-      <h1 className="text-4xl font-bold text-white">Gaming Encyclopedia</h1>
-      <p className="text-lg text-center mb-6 text-white">Click an image for info.</p>
+      <h1 className="title">Gaming Encyclopedia</h1>
+      <p className="subtitle">Click an image for info.</p>
       <Grid container spacing={2} justifyContent="center">
         {images.map((image) => (
           <Grid key={image.id} item xs={6} textAlign="center">
             <Item onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
-              <img src={image.src} alt={image.alt} className="rounded-lg shadow-lg hover:scale-105 transition-transform w-full" />
+              <img src={image.src} alt={image.alt} className="game-image" />
               <Typography variant="h6">{image.alt}</Typography>
             </Item>
           </Grid>
@@ -147,38 +148,11 @@ function ClickableImages(): JSX.Element {
   );
 }
 
-
-function GameDetails() {
-  const location = useLocation();
-  const game = location.state?.game;
-
-  if (!game) {
-    return (
-      <div className="bg-green-500 min-h-screen flex flex-col items-center p-6">
-        <SearchAppBar />
-        <h1 className="text-4xl font-bold text-white">Game not found</h1>
-        <Link to="/" className="text-blue-300 underline">Back to Home</Link>
-      </div>
-    );
-  }
-
-  return (
-    <div className="bg-green-500 min-h-screen flex flex-col items-center p-6">
-      <SearchAppBar />
-      <h1 className="text-4xl font-bold text-white">{game.alt}</h1>
-      <img src={game.src} alt={game.alt} className="rounded-lg shadow-lg w-1/2" />
-      <p className="text-white">More details coming soon!</p>
-      <Link to="/" className="text-blue-300 underline">Back to Home</Link>
-    </div>
-  );
-}
-
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<ClickableImages />} />
-        <Route path="/game/:id" element={<GameDetails />} />
       </Routes>
     </Router>
   );

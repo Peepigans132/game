@@ -1,42 +1,32 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Center the main container and add a border */
+.main-container {
+  max-width: 1200px; /* Adjust this value to control width */
+  margin: 0 auto; /* Centers the content */
+  border: 3px solid black; /* Black border around content */
+  padding: 20px; /* Adds spacing inside the border */
+  background-color: white; /* Sets background */
+}
+
+/* Title Styling */
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4a4a4a;
   text-align: center;
+  margin-bottom: 10px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Subtitle Styling */
+.subtitle {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+/* Game Images Styling */
+.game-image {
+  width: 100%; /* Make images fill their container */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px; /* Rounded edges */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Adds shadow effect */
 }
