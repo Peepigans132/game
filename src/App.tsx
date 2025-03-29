@@ -11,10 +11,9 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
+import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -32,8 +31,8 @@ const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
-  width: "100%",
+  marginLeft: theme.spacing(2),
+  width: "auto",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -48,10 +47,17 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
-  width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    width: "20ch",
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "35ch",
+      "&:focus": {
+        width: "40ch",
+      },
+    },
   },
 }));
 
@@ -79,16 +85,34 @@ const allImages: Image[] = [
 const currentUser = { username: "exampleUser", role: "superuser" };
 
 function SearchAppBar() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+    console.log("Search query:", event.target.value); // Replace with your search logic.
+  };
+
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton size="large" edge="start" color="inherit">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>Gaming Encyclopedia</Typography>
-        <Search>
-          <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
-          <StyledInputBase placeholder="Search…" />
+    <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <IconButton size="large" edge="start" color="inherit">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            Gaming Encyclopedia
+          </Typography>
+        </div>
+        <Search sx={{ flexGrow: 1, maxWidth: "400px" }}>
+          <SearchIconWrapper>
+            <MenuIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ "aria-label": "search" }}
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
         </Search>
       </Toolbar>
     </AppBar>
@@ -110,14 +134,12 @@ function ClickableImages(): JSX.Element {
   return (
     <div className="main-container">
       <SearchAppBar />
-      <h1>Gaming Encyclopedia</h1>
-      <p>Click an image for info.</p>
       <Container>
         <Grid container spacing={2} justifyContent="center">
           {selectedImages.map((image) => (
             <Grid key={image.id} item xs={6}>
               <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
-                <img src={image.src} alt={image.alt} className="game-image" style={{ width: "100%" }} />
+                <img src={image.src} alt={image.alt} className="game-image" style={{ width: "100%", border: "none" }} />
               </a>
               <Typography variant="h6">{image.alt}</Typography>
             </Grid>
@@ -148,7 +170,6 @@ function GameDetails() {
         <DialogTitle>Edit Game Info</DialogTitle>
         <DialogContent>
           <TextField label="Title" fullWidth value={editedImage?.alt || ""} onChange={(e) => setEditedImage({ ...editedImage!, alt: e.target.value })} />
-          <TextField label="Image URL" fullWidth value={editedImage?.src || ""} onChange={(e) => setEditedImage({ ...editedImage!, src: e.target.value })} />
           <TextField label="Info" fullWidth value={editedImage?.info || ""} onChange={(e) => setEditedImage({ ...editedImage!, info: e.target.value })} />
         </DialogContent>
         <DialogActions>
