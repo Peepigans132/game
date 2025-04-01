@@ -152,29 +152,52 @@ function ClickableImages(): JSX.Element {
 
 function GameDetails() {
   const { id } = useParams<{ id: string }>();
-  const image = allImages.find((img) => img.id === Number(id));
+  const imageIndex = allImages.findIndex((img) => img.id === Number(id));
   const [open, setOpen] = useState(false);
-  const [editedImage, setEditedImage] = useState(image);
+  const [editedImage, setEditedImage] = useState(allImages[imageIndex]);
 
-  if (!image) return <Container><h2>Game Not Found</h2></Container>;
+  if (imageIndex === -1 || !editedImage) {
+    return (
+      <Container>
+        <h2>Game Not Found</h2>
+      </Container>
+    );
+  }
+
+  const handleSave = () => {
+    // Update the image in the allImages array
+    allImages[imageIndex] = editedImage;
+    setOpen(false);
+    console.log("Updated allImages:", allImages); // For debugging
+  };
 
   return (
     <Container>
-      <h1>{image.alt}</h1>
-      <img src={image.src} alt={image.alt} style={{ maxWidth: "100%" }} />
-      <Typography>{image.info}</Typography>
+      <h1>{editedImage.alt}</h1>
+      <img src={editedImage.src} alt={editedImage.alt} style={{ maxWidth: "100%" }} />
+      <Typography>{editedImage.info}</Typography>
       {currentUser.role === "superuser" && (
         <Button variant="contained" onClick={() => setOpen(true)}>Edit</Button>
       )}
       <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Edit Game Info</DialogTitle>
         <DialogContent>
-          <TextField label="Title" fullWidth value={editedImage?.alt || ""} onChange={(e) => setEditedImage({ ...editedImage!, alt: e.target.value })} />
-          <TextField label="Info" fullWidth value={editedImage?.info || ""} onChange={(e) => setEditedImage({ ...editedImage!, info: e.target.value })} />
+          <TextField
+            label="Title"
+            fullWidth
+            value={editedImage.alt}
+            onChange={(e) => setEditedImage({ ...editedImage, alt: e.target.value })}
+          />
+          <TextField
+            label="Info"
+            fullWidth
+            value={editedImage.info}
+            onChange={(e) => setEditedImage({ ...editedImage, info: e.target.value })}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={() => setOpen(false)}>Save</Button>
+          <Button onClick={handleSave}>Save</Button>
         </DialogActions>
       </Dialog>
     </Container>
