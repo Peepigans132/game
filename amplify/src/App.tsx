@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -15,9 +16,13 @@ import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { AuthProvider } from "../src/AuthContext";
-import { useAuth } from "../src/AuthContext";
-import GameDetails from "../src/GameDetails";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import { AuthProvider } from "./components/AuthContext"; // Added AuthProvider
+import { useAuth } from "./components/AuthContext"; // Added useAuth for authentication
 import "./App.css";
 
 // Search bar styling
@@ -79,6 +84,8 @@ const allImages: Image[] = [
   { id: 4, src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png", alt: "Mega Man X", info: "A fast-paced action game." },
 ];
 
+const currentUser = { username: "exampleUser", role: "superuser" };
+
 function SearchAppBar() {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -115,7 +122,7 @@ function SearchAppBar() {
 
 function ClickableImages(): JSX.Element {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth(); // Added authentication check
 
   const selectedImages = React.useMemo(() => {
     const shuffled = allImages.sort(() => 0.5 - Math.random());
@@ -153,7 +160,7 @@ function ClickableImages(): JSX.Element {
 
 function App() {
   return (
-    <AuthProvider>
+    <AuthProvider> {/* Wrap the entire app with authentication */}
       <Router>
         <Routes>
           <Route path="/" element={<ClickableImages />} />
