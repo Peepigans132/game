@@ -14,10 +14,9 @@ import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
 import { AuthProvider } from "../src/AuthContext";
-import { useAuth } from "../src/AuthContext";
 import GameDetails from "../src/GameDetails";
+import Login from "../src/Login"; // Added Login page import
 import "./App.css";
 
 // Search bar styling
@@ -115,7 +114,6 @@ function SearchAppBar() {
 
 function ClickableImages(): JSX.Element {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const selectedImages = React.useMemo(() => {
     const shuffled = allImages.sort(() => 0.5 - Math.random());
@@ -130,22 +128,16 @@ function ClickableImages(): JSX.Element {
     <div className="main-container">
       <SearchAppBar />
       <Container>
-        {user ? (
-          <Grid container spacing={2} justifyContent="center">
-            {selectedImages.map((image) => (
-              <Grid key={image.id} item xs={6}>
-                <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
-                  <img src={image.src} alt={image.alt} className="game-image" style={{ width: "100%", border: "none" }} />
-                </a>
-                <Typography variant="h6">{image.alt}</Typography>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Typography variant="h6">
-            Please <Button variant="contained" color="primary" onClick={() => navigate("/login")}>Log in</Button> to view content.
-          </Typography>
-        )}
+        <Grid container spacing={2} justifyContent="center">
+          {selectedImages.map((image) => (
+            <Grid key={image.id} item xs={6}>
+              <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
+                <img src={image.src} alt={image.alt} className="game-image" style={{ width: "100%", border: "none" }} />
+              </a>
+              <Typography variant="h6">{image.alt}</Typography>
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </div>
   );
@@ -158,6 +150,7 @@ function App() {
         <Routes>
           <Route path="/" element={<ClickableImages />} />
           <Route path="/game/:id" element={<GameDetails />} />
+          <Route path="/login" element={<Login />} /> {/* Added Login Route */}
         </Routes>
       </Router>
     </AuthProvider>
