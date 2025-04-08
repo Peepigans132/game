@@ -1,7 +1,16 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom"; // Removed useNavigate
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
-import { Container, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 
 interface Game {
   id: number;
@@ -11,10 +20,30 @@ interface Game {
 }
 
 const allGames: Game[] = [
-  { id: 1, src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg", alt: "Donkey Kong Country 2", info: "A classic platformer game." },
-  { id: 2, src: "https://upload.wikimedia.org/wikipedia/en/3/32/Super_Mario_World_Coverart.png", alt: "Super Mario World", info: "A legendary Mario adventure." },
-  { id: 3, src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg", alt: "The Legend of Zelda", info: "An epic action-adventure game." },
-  { id: 4, src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png", alt: "Mega Man X", info: "A fast-paced action game." },
+  {
+    id: 1,
+    src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg",
+    alt: "Donkey Kong Country 2",
+    info: "A classic platformer game.",
+  },
+  {
+    id: 2,
+    src: "https://upload.wikimedia.org/wikipedia/en/3/32/Super_Mario_World_Coverart.png",
+    alt: "Super Mario World",
+    info: "A legendary Mario adventure.",
+  },
+  {
+    id: 3,
+    src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg",
+    alt: "The Legend of Zelda",
+    info: "An epic action-adventure game.",
+  },
+  {
+    id: 4,
+    src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png",
+    alt: "Mega Man X",
+    info: "A fast-paced action game.",
+  },
 ];
 
 const GameDetails: React.FC = () => {
@@ -23,6 +52,8 @@ const GameDetails: React.FC = () => {
   const game = allGames.find((g) => g.id === Number(id));
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedInfo, setEditedInfo] = useState(game?.info || "");
 
   if (!game) {
     return (
@@ -36,8 +67,14 @@ const GameDetails: React.FC = () => {
     if (!user) {
       setOpenDialog(true);
     } else {
-      // Redirect to edit functionality
+      setEditDialogOpen(true);
     }
+  };
+
+  const handleSave = () => {
+    console.log(`Game ID: ${id}, New Info: ${editedInfo}`);
+    alert("Game information updated!");
+    setEditDialogOpen(false);
   };
 
   return (
@@ -49,7 +86,7 @@ const GameDetails: React.FC = () => {
         Edit Game Info
       </Button>
 
-      {/* Login Required Dialog with Separate Buttons */}
+      {/* Login Required Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Login Required</DialogTitle>
         <DialogContent>
@@ -58,11 +95,37 @@ const GameDetails: React.FC = () => {
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
           <Link to="/login" style={{ textDecoration: "none" }}>
-            <Button variant="contained" color="primary">Log In</Button>
+            <Button variant="contained" color="primary">
+              Log In
+            </Button>
           </Link>
           <Link to="/signup" style={{ textDecoration: "none" }}>
-            <Button variant="contained" color="secondary">Sign Up</Button>
+            <Button variant="contained" color="secondary">
+              Sign Up
+            </Button>
           </Link>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Game Info Dialog */}
+      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+        <DialogTitle>Edit Game Info</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Game Info"
+            fullWidth
+            margin="normal"
+            value={editedInfo}
+            onChange={(e) => setEditedInfo(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>
