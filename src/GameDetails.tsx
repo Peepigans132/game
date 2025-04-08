@@ -50,16 +50,19 @@ const GameDetails: React.FC = () => {
         Edit Game Info
       </Button>
 
-      {/* Login Prompt Dialog */}
+      {/* Login Required Dialog with Separate Buttons */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Login Required</DialogTitle>
         <DialogContent>
-          <Typography>You must log in to edit the game info.</Typography>
+          <Typography>You must log in or sign up to edit the game info.</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
           <Button onClick={() => navigate("/login")} variant="contained" color="primary">
-            Go to Login / Sign Up
+            Log In
+          </Button>
+          <Button onClick={() => navigate("/signup")} variant="contained" color="secondary">
+            Sign Up
           </Button>
         </DialogActions>
       </Dialog>
