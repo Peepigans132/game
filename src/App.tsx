@@ -17,6 +17,7 @@ import Grid from "@mui/material/Grid";
 import { AuthProvider } from "../src/AuthContext";
 import GameDetails from "../src/GameDetails";
 import Login from "../src/Login"; // Added Login page import
+import Signup from "../src/signup"; // Added SignUp page import
 import "./App.css";
 
 // Search bar styling
@@ -151,6 +152,7 @@ function App() {
           <Route path="/" element={<ClickableImages />} />
           <Route path="/game/:id" element={<GameDetails />} />
           <Route path="/login" element={<Login />} /> {/* Added Login Route */}
+          <Route path="/signup" element={<Signup />} /> {/* Added SignUp Route */}
         </Routes>
       </Router>
     </AuthProvider>
