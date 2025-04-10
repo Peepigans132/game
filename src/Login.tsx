@@ -1,35 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
-import { Container, TextField, Button, Typography } from "@mui/material";
+import { Container, TextField, Button, Typography, Checkbox, FormControlLabel } from "@mui/material";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
-  const [showOtpField, setShowOtpField] = useState(false);
-
-  const { login, verifyOTP } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    // Simulating AWS Cognito login (replace with actual Cognito SDK)
+  const handleLogin = () => {
     if (username === "admin" && password === "password123") {
-      login(username);
-      setShowOtpField(true); // Show OTP field after password validation
-    } else {
-      setError("Invalid username or password.");
-    }
-  };
-
-  const handleVerifyOTP = async () => {
-    // Simulating OTP verification via AWS Cognito (replace with actual API call)
-    if (otp === "123456") {
-      verifyOTP();
+      login(username, rememberMe); // Pass both username and rememberMe
       navigate("/");
     } else {
-      setError("Invalid OTP.");
+      setError("Invalid username or password.");
     }
   };
 
@@ -39,42 +26,34 @@ const Login: React.FC = () => {
         Login
       </Typography>
       {error && <Typography color="error">{error}</Typography>}
-      {!showOtpField ? (
-        <>
-          <TextField
-            label="Username"
-            fullWidth
-            margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+      <TextField
+        label="Username"
+        fullWidth
+        margin="normal"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            color="primary"
           />
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button variant="contained" color="primary" onClick={handleLogin}>
-            Login
-          </Button>
-        </>
-      ) : (
-        <>
-          <Typography variant="h6">Enter OTP Code</Typography>
-          <TextField
-            label="OTP"
-            fullWidth
-            margin="normal"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-          />
-          <Button variant="contained" color="primary" onClick={handleVerifyOTP}>
-            Verify OTP
-          </Button>
-        </>
-      )}
+        }
+        label="Remember Me"
+      />
+      <Button variant="contained" color="primary" onClick={handleLogin}>
+        Login
+      </Button>
     </Container>
   );
 };
