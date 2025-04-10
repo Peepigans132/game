@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
 import {
   Container,
@@ -52,7 +52,6 @@ const GameDetails: React.FC = () => {
   const gameIndex = allGames.findIndex((g) => g.id === Number(id));
   const game = allGames[gameIndex];
 
-  const [openDialog, setOpenDialog] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editedInfo, setEditedInfo] = useState(game?.info || "");
 
@@ -66,7 +65,7 @@ const GameDetails: React.FC = () => {
 
   const handleEditClick = () => {
     if (!user) {
-      setOpenDialog(true);
+      alert("You must be logged in to edit game information.");
     } else {
       setEditDialogOpen(true);
     }
@@ -88,27 +87,6 @@ const GameDetails: React.FC = () => {
       <Button variant="contained" color="primary" onClick={handleEditClick}>
         Edit Game Info
       </Button>
-
-      {/* Login Required Dialog */}
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Login Required</DialogTitle>
-        <DialogContent>
-          <Typography>You must log in or sign up to edit the game info.</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-          <Link to="/login" style={{ textDecoration: "none" }}>
-            <Button variant="contained" color="primary">
-              Log In
-            </Button>
-          </Link>
-          <Link to="/signup" style={{ textDecoration: "none" }}>
-            <Button variant="contained" color="secondary">
-              Sign Up
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog>
 
       {/* Edit Game Info Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>

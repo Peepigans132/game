@@ -16,9 +16,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
 import { AuthProvider } from "../src/AuthContext";
 import GameDetails from "../src/GameDetails";
-import Login from "../src/Login"; // Added Login page import
+import Login  from "../src/Login"; // Corrected import for named export
 import Signup from "../src/signup"; // Added SignUp page import
-import "./App.css";
+import  "../src/App.css";
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({

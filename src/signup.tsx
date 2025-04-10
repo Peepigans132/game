@@ -5,12 +5,13 @@ import { Container, TextField, Button, Typography } from "@mui/material";
 
 const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSignup = () => {
-    const success = signup(username);
+    const success = signup(username, password);
     if (success) {
       alert("Signup successful! You can now log in.");
       navigate("/login");
@@ -31,6 +32,14 @@ const Signup: React.FC = () => {
         margin="normal"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <Button variant="contained" color="primary" onClick={handleSignup}>
         Sign Up

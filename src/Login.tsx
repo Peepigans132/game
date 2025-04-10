@@ -12,8 +12,8 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (username === "admin" && password === "password123") {
-      login(username, rememberMe); // Pass both username and rememberMe
+    const success = login(username, password, rememberMe);
+    if (success) {
       navigate("/");
     } else {
       setError("Invalid username or password.");

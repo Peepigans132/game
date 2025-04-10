@@ -7,15 +7,15 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, rememberMe: boolean) => void;
-  signup: (username: string) => boolean; // Returns false if username is taken
+  login: (username: string, password: string, rememberMe: boolean) => boolean; // Returns false if login fails
+  signup: (username: string, password: string) => boolean; // Returns false if username is taken
   verifyOTP: () => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const registeredUsers: string[] = []; // Array to store registered usernames
+const registeredUsers: { username: string; password: string }[] = []; // Array to store registered users
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,10 +28,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  const login = (username: string, rememberMe: boolean) => {
-    if (!registeredUsers.includes(username)) {
-      alert("Username not found. Please sign up first.");
-      return;
+  const login = (username: string, password: string, rememberMe: boolean): boolean => {
+    const foundUser = registeredUsers.find(
+      (user) => user.username === username && user.password === password
+    );
+
+    if (!foundUser) {
+      return false; // Invalid username or password
     }
 
     const newUser = { username, isVerified: false };
@@ -42,14 +45,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } else {
       sessionStorage.setItem("user", JSON.stringify(newUser)); // Persist user in sessionStorage
     }
+
+    return true;
   };
 
-  const signup = (username: string): boolean => {
-    if (registeredUsers.includes(username)) {
+  const signup = (username: string, password: string): boolean => {
+    const userExists = registeredUsers.some((user) => user.username === username);
+
+    if (userExists) {
       return false; // Username is already taken
     }
 
-    registeredUsers.push(username); // Add username to the registered users list
+    registeredUsers.push({ username, password }); // Add new user to the registered users list
     return true;
   };
 
