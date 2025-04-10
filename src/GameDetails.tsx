@@ -49,7 +49,8 @@ const allGames: Game[] = [
 const GameDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const game = allGames.find((g) => g.id === Number(id));
+  const gameIndex = allGames.findIndex((g) => g.id === Number(id));
+  const game = allGames[gameIndex];
 
   const [openDialog, setOpenDialog] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -72,8 +73,10 @@ const GameDetails: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log(`Game ID: ${id}, New Info: ${editedInfo}`);
-    alert("Game information updated!");
+    if (gameIndex !== -1) {
+      allGames[gameIndex].info = editedInfo; // Update the game info in the array
+      alert("Game information updated!");
+    }
     setEditDialogOpen(false);
   };
 
