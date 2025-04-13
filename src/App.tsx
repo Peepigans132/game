@@ -14,15 +14,13 @@ import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
-import { AuthProvider } from "../src/AuthContext";
-import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
-
-
+import { AuthProvider } from "../src/AuthContext";
 import GameDetails from "../src/GameDetails";
-import Login from "../src/Login"; // Corrected import for named export
-import Signup from "../src/signup"; // Added SignUp page import
+import Login from "../src/Login";
+import Signup from "../src/signup";
 import "../src/App.css";
+import { Link } from "react-router-dom";
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({
@@ -103,11 +101,9 @@ const allImages: Image[] = [
   },
 ];
 
-function SearchAppBar() {
-  const [searchQuery, setSearchQuery] = useState("");
-
+function SearchAppBar({ onSearch }: { onSearch: (query: string) => void }) {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    onSearch(event.target.value);
   };
 
   return (
@@ -128,7 +124,6 @@ function SearchAppBar() {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
-            value={searchQuery}
             onChange={handleSearchChange}
           />
         </Search>
@@ -147,11 +142,17 @@ function SearchAppBar() {
 
 function ClickableImages(): JSX.Element {
   const navigate = useNavigate();
+  const [filteredImages, setFilteredImages] = useState<Image[]>(allImages);
 
-  const selectedImages = React.useMemo(() => {
-    const shuffled = allImages.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 2);
-  }, []);
+  const handleSearch = (query: string) => {
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = allImages.filter(
+      (image) =>
+        image.alt.toLowerCase().includes(lowerCaseQuery) ||
+        image.info.toLowerCase().includes(lowerCaseQuery)
+    );
+    setFilteredImages(filtered);
+  };
 
   const handleClick = (image: Image) => {
     navigate(`/game/${image.id}`);
@@ -159,10 +160,10 @@ function ClickableImages(): JSX.Element {
 
   return (
     <div className="main-container">
-      <SearchAppBar />
+      <SearchAppBar onSearch={handleSearch} />
       <Container>
         <Grid container spacing={2} justifyContent="center">
-          {selectedImages.map((image) => (
+          {filteredImages.map((image) => (
             <Grid key={image.id} item xs={6}>
               <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
                 <img
