@@ -15,10 +15,14 @@ import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
 import { AuthProvider } from "../src/AuthContext";
+import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
+
+
 import GameDetails from "../src/GameDetails";
-import Login  from "../src/Login"; // Corrected import for named export
+import Login from "../src/Login"; // Corrected import for named export
 import Signup from "../src/signup"; // Added SignUp page import
-import  "../src/App.css";
+import "../src/App.css";
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({
@@ -73,10 +77,30 @@ interface Image {
 }
 
 const allImages: Image[] = [
-  { id: 1, src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg", alt: "Donkey Kong Country 2", info: "A classic platformer game." },
-  { id: 2, src: "https://upload.wikimedia.org/wikipedia/en/3/32/Super_Mario_World_Coverart.png", alt: "Super Mario World", info: "A legendary Mario adventure." },
-  { id: 3, src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg", alt: "The Legend of Zelda", info: "An epic action-adventure game." },
-  { id: 4, src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png", alt: "Mega Man X", info: "A fast-paced action game." },
+  {
+    id: 1,
+    src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg",
+    alt: "Donkey Kong Country 2",
+    info: "A classic platformer game.",
+  },
+  {
+    id: 2,
+    src: "https://upload.wikimedia.org/wikipedia/en/3/32/Super_Mario_World_Coverart.png",
+    alt: "Super Mario World",
+    info: "A legendary Mario adventure.",
+  },
+  {
+    id: 3,
+    src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg",
+    alt: "The Legend of Zelda",
+    info: "An epic action-adventure game.",
+  },
+  {
+    id: 4,
+    src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png",
+    alt: "Mega Man X",
+    info: "A fast-paced action game.",
+  },
 ];
 
 function SearchAppBar() {
@@ -108,6 +132,14 @@ function SearchAppBar() {
             onChange={handleSearchChange}
           />
         </Search>
+        <div>
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+          <Button color="inherit" component={Link} to="/signup">
+            Sign Up
+          </Button>
+        </div>
       </Toolbar>
     </AppBar>
   );
@@ -133,7 +165,12 @@ function ClickableImages(): JSX.Element {
           {selectedImages.map((image) => (
             <Grid key={image.id} item xs={6}>
               <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
-                <img src={image.src} alt={image.alt} className="game-image" style={{ width: "100%", border: "none" }} />
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="game-image"
+                  style={{ width: "100%", border: "none" }}
+                />
               </a>
               <Typography variant="h6">{image.alt}</Typography>
             </Grid>
@@ -151,8 +188,8 @@ function App() {
         <Routes>
           <Route path="/" element={<ClickableImages />} />
           <Route path="/game/:id" element={<GameDetails />} />
-          <Route path="/login" element={<Login />} /> {/* Added Login Route */}
-          <Route path="/signup" element={<Signup />} /> {/* Added SignUp Route */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </Router>
     </AuthProvider>
