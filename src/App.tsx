@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -15,12 +15,13 @@ import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button"; // Import Button from Material-UI
-import { AuthProvider } from "../src/AuthContext";
+import Button from "@mui/material/Button";
+import { AuthProvider, useAuth } from "../src/AuthContext"; // Use useAuth hook
 import GameDetails from "../src/GameDetails";
 import Login from "../src/Login";
 import Signup from "../src/signup";
 import "../src/App.css";
+import AccountSettings from "../src/AccountSettings"; // Import AccountSettings
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({
@@ -101,11 +102,17 @@ const allImages: Image[] = [
   },
 ];
 
-function SearchAppBar() {
-  const [searchQuery, setSearchQuery] = useState("");
+function SearchAppBar({ onSearch }: { onSearch: (query: string) => void }) {
+  const { user, logout } = useAuth(); // Use useAuth hook
+  const navigate = useNavigate();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    onSearch(event.target.value);
+  };
+
+  const handleLogout = () => {
+    logout(); // Log the user out
+    navigate("/login"); // Redirect to the login page
   };
 
   return (
@@ -126,17 +133,29 @@ function SearchAppBar() {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
-            value={searchQuery}
             onChange={handleSearchChange}
           />
         </Search>
         <div>
-          <Button color="inherit" component={Link} to="/login">
-            Login
-          </Button>
-          <Button color="inherit" component={Link} to="/signup">
-            Sign Up
-          </Button>
+          {user ? (
+            <>
+              <Button color="inherit" onClick={() => navigate("/account")}>
+                Account Settings
+              </Button>
+              <Button color="inherit" onClick={handleLogout}>
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" component={Link} to="/login">
+                Login
+              </Button>
+              <Button color="inherit" component={Link} to="/signup">
+                Sign Up
+              </Button>
+            </>
+          )}
         </div>
       </Toolbar>
     </AppBar>
@@ -145,11 +164,17 @@ function SearchAppBar() {
 
 function ClickableImages(): JSX.Element {
   const navigate = useNavigate();
+  const [filteredImages, setFilteredImages] = React.useState<Image[]>(allImages);
 
-  const selectedImages = React.useMemo(() => {
-    const shuffled = allImages.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 2);
-  }, []);
+  const handleSearch = (query: string) => {
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = allImages.filter(
+      (image) =>
+        image.alt.toLowerCase().includes(lowerCaseQuery) ||
+        image.info.toLowerCase().includes(lowerCaseQuery)
+    );
+    setFilteredImages(filtered);
+  };
 
   const handleClick = (image: Image) => {
     navigate(`/game/${image.id}`);
@@ -157,10 +182,10 @@ function ClickableImages(): JSX.Element {
 
   return (
     <div className="main-container">
-      <SearchAppBar />
+      <SearchAppBar onSearch={handleSearch} /> {/* Pass onSearch prop */}
       <Container>
         <Grid container spacing={2} justifyContent="center">
-          {selectedImages.map((image) => (
+          {filteredImages.map((image) => (
             <Grid key={image.id} item xs={6}>
               <a onClick={() => handleClick(image)} style={{ cursor: "pointer" }}>
                 <img
@@ -188,6 +213,7 @@ function App() {
           <Route path="/game/:id" element={<GameDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/account" element={<AccountSettings />} /> {/* New Account Settings Route */}
         </Routes>
       </Router>
     </AuthProvider>

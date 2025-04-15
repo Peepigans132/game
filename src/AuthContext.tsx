@@ -7,20 +7,19 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (username: string, password: string, rememberMe: boolean) => boolean; // Returns false if login fails
-  signup: (username: string, password: string) => boolean; // Returns false if username is taken
+  login: (username: string, password: string, rememberMe: boolean) => boolean;
+  signup: (username: string, password: string) => boolean;
   verifyOTP: () => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const registeredUsers: { username: string; password: string }[] = []; // Array to store registered users
+const registeredUsers: { username: string; password: string }[] = [];
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // Load user from localStorage or sessionStorage when the app initializes
   useEffect(() => {
     const storedUser = localStorage.getItem("user") || sessionStorage.getItem("user");
     if (storedUser) {
@@ -34,16 +33,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 
     if (!foundUser) {
-      return false; // Invalid username or password
+      return false;
     }
 
     const newUser = { username, isVerified: false };
     setUser(newUser);
 
     if (rememberMe) {
-      localStorage.setItem("user", JSON.stringify(newUser)); // Persist user in localStorage
+      localStorage.setItem("user", JSON.stringify(newUser));
     } else {
-      sessionStorage.setItem("user", JSON.stringify(newUser)); // Persist user in sessionStorage
+      sessionStorage.setItem("user", JSON.stringify(newUser));
     }
 
     return true;
@@ -53,10 +52,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const userExists = registeredUsers.some((user) => user.username === username);
 
     if (userExists) {
-      return false; // Username is already taken
+      return false;
     }
 
-    registeredUsers.push({ username, password }); // Add new user to the registered users list
+    registeredUsers.push({ username, password });
     return true;
   };
 
@@ -65,17 +64,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const updatedUser = { ...user, isVerified: true };
       setUser(updatedUser);
       if (localStorage.getItem("user")) {
-        localStorage.setItem("user", JSON.stringify(updatedUser)); // Update localStorage
+        localStorage.setItem("user", JSON.stringify(updatedUser));
       } else {
-        sessionStorage.setItem("user", JSON.stringify(updatedUser)); // Update sessionStorage
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
       }
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Remove user from localStorage
-    sessionStorage.removeItem("user"); // Remove user from sessionStorage
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
   };
 
   return (
@@ -85,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
