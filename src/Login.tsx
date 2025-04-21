@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
 import { Container, TextField, Button, Typography, Checkbox, FormControlLabel } from "@mui/material";
@@ -11,10 +11,30 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Load saved credentials from localStorage when the component mounts
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
+    if (savedUsername && savedPassword) {
+      setUsername(savedUsername);
+      setPassword(savedPassword);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleLogin = () => {
-    const success = login(username, password, rememberMe);
+    const success = login(username, password);
     if (success) {
-      navigate("/");
+      if (rememberMe) {
+        // Save credentials to localStorage
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+      } else {
+        // Clear credentials from localStorage
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+      }
+      navigate("/"); // Redirect to the home page after successful login
     } else {
       setError("Invalid username or password.");
     }

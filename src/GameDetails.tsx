@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
 import {
   Container,
@@ -9,8 +9,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  DialogContentText,
   TextField,
 } from "@mui/material";
+
 
 interface Game {
   id: number;
@@ -18,6 +20,7 @@ interface Game {
   alt: string;
   info: string;
 }
+
 
 const allGames: Game[] = [
   {
@@ -46,14 +49,18 @@ const allGames: Game[] = [
   },
 ];
 
+
 const GameDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const gameIndex = allGames.findIndex((g) => g.id === Number(id));
   const game = allGames[gameIndex];
 
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [editedInfo, setEditedInfo] = useState(game?.info || "");
+
 
   if (!game) {
     return (
@@ -63,13 +70,15 @@ const GameDetails: React.FC = () => {
     );
   }
 
+
   const handleEditClick = () => {
     if (!user) {
-      alert("You must be logged in to edit game information.");
+      setLoginDialogOpen(true); // Open login dialog if the user is not logged in
     } else {
-      setEditDialogOpen(true);
+      setEditDialogOpen(true); // Open edit dialog if the user is logged in
     }
   };
+
 
   const handleSave = () => {
     if (gameIndex !== -1) {
@@ -79,6 +88,12 @@ const GameDetails: React.FC = () => {
     setEditDialogOpen(false);
   };
 
+
+  const handleCloseLoginDialog = () => {
+    setLoginDialogOpen(false);
+  };
+
+
   return (
     <Container>
       <Typography variant="h4">{game.alt}</Typography>
@@ -87,6 +102,7 @@ const GameDetails: React.FC = () => {
       <Button variant="contained" color="primary" onClick={handleEditClick}>
         Edit Game Info
       </Button>
+
 
       {/* Edit Game Info Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
@@ -109,8 +125,28 @@ const GameDetails: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+
+      {/* Login Prompt Dialog */}
+      <Dialog open={loginDialogOpen} onClose={handleCloseLoginDialog}>
+        <DialogTitle>You must sign in</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You must sign in to edit the game info.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button component={Link} to="/login" onClick={handleCloseLoginDialog}>
+            Login
+          </Button>
+          <Button component={Link} to="/signup" onClick={handleCloseLoginDialog}>
+            Sign Up
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
+
 
 export default GameDetails;

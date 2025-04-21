@@ -6,17 +6,22 @@ import { Container, TextField, Button, Typography } from "@mui/material";
 const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
 
   const handleSignup = () => {
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     const success = signup(username, password);
     if (success) {
-      alert("Signup successful! You can now log in.");
-      navigate("/login");
+      navigate("/"); // Redirect to the home page
     } else {
-      setError("Username is already taken. Please choose a different one.");
+      setError("Username already exists.");
     }
   };
 
@@ -40,6 +45,14 @@ const Signup: React.FC = () => {
         margin="normal"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="Confirm Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
       />
       <Button variant="contained" color="primary" onClick={handleSignup}>
         Sign Up

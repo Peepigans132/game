@@ -1,12 +1,11 @@
 .main-container {
-  max-width: 1200px;
+  max-width: 1600px; /* Increased from 1200px to 1600px */
   margin: 0 auto;
   border: 5px solid black;
-  padding: 20px;
+  padding: 40px; /* Increased padding for more spacing */
   background-color: white;
   overflow: hidden;
 }
-
 
 .title {
   font-size: 2rem;
