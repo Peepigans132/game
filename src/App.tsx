@@ -78,7 +78,7 @@ interface Image {
 const allImages: Image[] = [
   {
     id: 1,
-    src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg",
+    src: "https://upload.wikimedia.org/wikipedia/en/c/c3/DK_Country_2.jpg",
     alt: "Donkey Kong Country 2",
     info: "A classic platformer game.",
   },
@@ -90,7 +90,7 @@ const allImages: Image[] = [
   },
   {
     id: 3,
-    src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg",
+    src: "https://upload.wikimedia.org/wikipedia/en/2/21/The_Legend_of_Zelda_A_Link_to_the_Past_SNES_Game_Cover.jpg",
     alt: "The Legend of Zelda",
     info: "An epic action-adventure game.",
   },
@@ -99,7 +99,18 @@ const allImages: Image[] = [
     src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png",
     alt: "Mega Man X",
     info: "A fast-paced action game.",
+
+
   },
+
+  {
+
+    
+    id: 5,
+    src: "https://cdn.thegamesdb.net/images/original/boxart/front/60245-1.jpg",
+    alt: "Sonic 3 & Knuckles",
+    info: "Sonic's biggest adventure yet."
+  }
 ];
 
 function SearchAppBar() {

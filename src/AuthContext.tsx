@@ -20,7 +20,11 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Load the user from localStorage on initial load
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const login = (username: string, password: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
@@ -37,9 +41,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signup = (username: string, password: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
-    if (storedUsers[username]) return false;
+    if (storedUsers[username]) return false; // Username already exists
     storedUsers[username] = { password, isVerified: false }; // Default isVerified to false
     localStorage.setItem("users", JSON.stringify(storedUsers));
+
+    // Automatically log the user in after signup
+    const newUser = { username, isVerified: false };
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
     return true;
   };
 

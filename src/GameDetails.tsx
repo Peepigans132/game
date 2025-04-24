@@ -12,7 +12,7 @@ import {
   DialogContentText,
   TextField,
 } from "@mui/material";
-
+import "../src/App.css";
 
 interface Game {
   id: number;
@@ -21,11 +21,10 @@ interface Game {
   info: string;
 }
 
-
 const allGames: Game[] = [
   {
     id: 1,
-    src: "https://m.media-amazon.com/images/I/614zA+E6wvL._AC_UF1000,1000_QL80_.jpg",
+    src: "https://upload.wikimedia.org/wikipedia/en/c/c3/DK_Country_2.jpg",
     alt: "Donkey Kong Country 2",
     info: "A classic platformer game.",
   },
@@ -37,7 +36,7 @@ const allGames: Game[] = [
   },
   {
     id: 3,
-    src: "https://www.vgmpf.com/Wiki/images/2/2c/Legend_of_Zelda_-_NES_-_Album_Art.jpg",
+    src: "https://upload.wikimedia.org/wikipedia/en/2/21/The_Legend_of_Zelda_A_Link_to_the_Past_SNES_Game_Cover.jpg",
     alt: "The Legend of Zelda",
     info: "An epic action-adventure game.",
   },
@@ -47,8 +46,14 @@ const allGames: Game[] = [
     alt: "Mega Man X",
     info: "A fast-paced action game.",
   },
-];
 
+  {
+    id: 5,
+    src: "https://cdn.thegamesdb.net/images/original/boxart/front/60245-1.jpg",
+    alt: "Sonic 3 & Knuckles",
+    info: "Sonic's biggest adventure yet.",
+  },
+];
 
 const GameDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,11 +61,11 @@ const GameDetails: React.FC = () => {
   const gameIndex = allGames.findIndex((g) => g.id === Number(id));
   const game = allGames[gameIndex];
 
-
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [headerDialogOpen, setHeaderDialogOpen] = useState(false);
   const [editedInfo, setEditedInfo] = useState(game?.info || "");
-
+  const [header, setHeader] = useState("");
 
   if (!game) {
     return (
@@ -70,7 +75,6 @@ const GameDetails: React.FC = () => {
     );
   }
 
-
   const handleEditClick = () => {
     if (!user) {
       setLoginDialogOpen(true); // Open login dialog if the user is not logged in
@@ -79,30 +83,46 @@ const GameDetails: React.FC = () => {
     }
   };
 
+  const handleAddHeaderClick = () => {
+    if (!user) {
+      setLoginDialogOpen(true); // Open login dialog if the user is not logged in
+    } else {
+      setHeaderDialogOpen(true); // Open header dialog if the user is logged in
+    }
+  };
+
+  const handleSaveHeader = () => {
+    setHeaderDialogOpen(false);
+  };
 
   const handleSave = () => {
     if (gameIndex !== -1) {
       allGames[gameIndex].info = editedInfo; // Update the game info in the array
-      alert("Game information updated!");
     }
     setEditDialogOpen(false);
   };
-
 
   const handleCloseLoginDialog = () => {
     setLoginDialogOpen(false);
   };
 
-
   return (
     <Container>
       <Typography variant="h4">{game.alt}</Typography>
-      <img src={game.src} alt={game.alt} style={{ maxWidth: "100%" }} />
+      <img src={game.src} alt={game.alt} className="game-image" />
+      {header && <Typography variant="h5">{header}</Typography>}
       <Typography>{game.info}</Typography>
       <Button variant="contained" color="primary" onClick={handleEditClick}>
         Edit Game Info
       </Button>
-
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleAddHeaderClick}
+        style={{ marginLeft: "10px" }}
+      >
+        Add Header
+      </Button>
 
       {/* Edit Game Info Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
@@ -126,13 +146,34 @@ const GameDetails: React.FC = () => {
         </DialogActions>
       </Dialog>
 
+      {/* Add Header Dialog */}
+      <Dialog open={headerDialogOpen} onClose={() => setHeaderDialogOpen(false)}>
+        <DialogTitle>Add Header</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Header"
+            fullWidth
+            margin="normal"
+            value={header}
+            onChange={(e) => setHeader(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setHeaderDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveHeader} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Login Prompt Dialog */}
       <Dialog open={loginDialogOpen} onClose={handleCloseLoginDialog}>
         <DialogTitle>You must sign in</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You must sign in to edit the game info.
+            You must sign in to add a header or edit the game info.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -147,6 +188,5 @@ const GameDetails: React.FC = () => {
     </Container>
   );
 };
-
 
 export default GameDetails;
