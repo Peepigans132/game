@@ -98,7 +98,7 @@ const allImages: Image[] = [
     id: 4,
     src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png",
     alt: "Mega Man X",
-    info: "A fast-paced action game.",
+    info: "A fast-paced action games.",
 
 
   },

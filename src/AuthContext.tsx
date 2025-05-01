@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface User {
   username: string;
-  isVerified: boolean; // Add isVerified property
+  isVerified: boolean; // Example property to indicate if the user is verified
 }
 
 interface AuthContextType {
@@ -29,11 +29,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (username: string, password: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
     if (storedUsers[username]?.password === password) {
-      setUser({ username, isVerified: storedUsers[username].isVerified });
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ username, isVerified: storedUsers[username].isVerified })
-      );
+      const loggedInUser = { username, isVerified: storedUsers[username].isVerified };
+      setUser(loggedInUser);
+      localStorage.setItem("user", JSON.stringify(loggedInUser));
       return true;
     }
     return false;
@@ -41,7 +39,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const signup = (username: string, password: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
-    if (storedUsers[username]) return false; // Username already exists
+    if (storedUsers[username]) {
+      // Username already exists
+      return false;
+    }
+    // Add the new user to the stored users
     storedUsers[username] = { password, isVerified: false }; // Default isVerified to false
     localStorage.setItem("users", JSON.stringify(storedUsers));
 

@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
-import { Container, TextField, Button, Typography, Checkbox, FormControlLabel } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { login } = useAuth(); // Use the login function from AuthContext
   const navigate = useNavigate();
 
   // Load saved credentials from localStorage when the component mounts
@@ -22,21 +29,30 @@ const Login: React.FC = () => {
     }
   }, []);
 
-  const handleLogin = () => {
-    const success = login(username, password);
-    if (success) {
-      if (rememberMe) {
-        // Save credentials to localStorage
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+  const handleLogin = async () => {
+    try {
+      // Call the login function from AuthContext
+      const success = login(username, password);
+      if (success) {
+        if (rememberMe) {
+          // Save credentials to localStorage for persistent login
+          localStorage.setItem("username", username);
+          localStorage.setItem("password", password);
+        } else {
+          // Clear credentials from localStorage
+          localStorage.removeItem("username");
+          localStorage.removeItem("password");
+        }
+        navigate("/"); // Redirect to the home page after successful login
       } else {
-        // Clear credentials from localStorage
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
+        throw new Error("Invalid username or password.");
       }
-      navigate("/"); // Redirect to the home page after successful login
-    } else {
-      setError("Invalid username or password.");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     }
   };
 

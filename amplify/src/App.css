@@ -7,6 +7,12 @@
   overflow: hidden;
 }
 
+.scrollable-container {
+  max-height: 100vh; /* Set the maximum height to the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 20px;
+  box-sizing: border-box;
+}
 
 .title {
   font-size: 2rem;

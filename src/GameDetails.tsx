@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
 import {
@@ -46,7 +46,6 @@ const allGames: Game[] = [
     alt: "Mega Man X",
     info: "A fast-paced action game.",
   },
-
   {
     id: 5,
     src: "https://cdn.thegamesdb.net/images/original/boxart/front/60245-1.jpg",
@@ -66,6 +65,17 @@ const GameDetails: React.FC = () => {
   const [headerDialogOpen, setHeaderDialogOpen] = useState(false);
   const [editedInfo, setEditedInfo] = useState(game?.info || "");
   const [header, setHeader] = useState("");
+
+  // Ref for the scrollable container
+  const scrollableContainerRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to the bottom whenever header or paragraph changes
+  useEffect(() => {
+    if (scrollableContainerRef.current) {
+      scrollableContainerRef.current.scrollTop =
+        scrollableContainerRef.current.scrollHeight;
+    }
+  }, [header, editedInfo]);
 
   if (!game) {
     return (
@@ -107,22 +117,27 @@ const GameDetails: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Typography variant="h4">{game.alt}</Typography>
-      <img src={game.src} alt={game.alt} className="game-image" />
-      {header && <Typography variant="h5">{header}</Typography>}
-      <Typography>{game.info}</Typography>
-      <Button variant="contained" color="primary" onClick={handleEditClick}>
-        Edit Game Info
-      </Button>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleAddHeaderClick}
-        style={{ marginLeft: "10px" }}
-      >
-        Add Header
-      </Button>
+    <div
+      className="scrollable-container"
+      ref={scrollableContainerRef} // Attach the ref to the container
+    >
+      <Container>
+        <Typography variant="h4">{game.alt}</Typography>
+        <img src={game.src} alt={game.alt} className="game-image" />
+        {header && <Typography variant="h5">{header}</Typography>}
+        <Typography>{game.info}</Typography>
+        <Button variant="contained" color="primary" onClick={handleEditClick}>
+          Edit Game Info
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleAddHeaderClick}
+          style={{ marginLeft: "10px" }}
+        >
+          Add Header
+        </Button>
+      </Container>
 
       {/* Edit Game Info Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
@@ -185,7 +200,7 @@ const GameDetails: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </div>
   );
 };
 
