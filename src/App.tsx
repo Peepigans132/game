@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,7 +22,7 @@ import Login from "../src/Login";
 import Signup from "../src/signup";
 import AccountSettings from "../src/AccountSettings"; // Import AccountSettings
 import "../src/App.css";
-import "../src/index.css"
+import "../src/index.css";
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({
@@ -99,26 +99,21 @@ const allImages: Image[] = [
     id: 4,
     src: "https://upload.wikimedia.org/wikipedia/en/f/f1/Mega_Man_X_Coverart.png",
     alt: "Mega Man X",
-    info: "A fast-paced action games.",
-
-
+    info: "A fast-paced action game.",
   },
-
   {
-
-    
     id: 5,
     src: "https://cdn.thegamesdb.net/images/original/boxart/front/60245-1.jpg",
     alt: "Sonic 3 & Knuckles",
-    info: "Sonic's biggest adventure yet."
-  }
+    info: "Sonic's biggest adventure yet.",
+  },
 ];
 
 function SearchAppBar() {
   const { user, logout } = useAuth(); // Use useAuth hook
   const navigate = useNavigate();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -217,13 +212,27 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          <Route path="/" element={<ClickableImages />} />
-          <Route path="/game/:id" element={<GameDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/account" element={<AccountSettings />} /> {/* Add Account Settings route */}
-        </Routes>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+          <div style={{ flex: 1 }}>
+            <Routes>
+              <Route path="/" element={<ClickableImages />} />
+              <Route path="/game/:id" element={<GameDetails />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/account" element={<AccountSettings />} />
+            </Routes>
+          </div>
+          <footer
+            style={{
+              textAlign: "center",
+              padding: "10px 0",
+              backgroundColor: "#f1f1f1",
+              fontSize: "12px",
+            }}
+          >
+            © {new Date().getFullYear()} Gaming Encyclopedia. All rights reserved.
+          </footer>
+        </div>
       </Router>
     </AuthProvider>
   );
