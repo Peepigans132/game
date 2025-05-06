@@ -22,6 +22,7 @@ import Login from "../src/Login";
 import Signup from "../src/signup";
 import AccountSettings from "../src/AccountSettings"; // Import AccountSettings
 import "../src/App.css";
+import "../src/index.css"
 
 // Search bar styling
 const Search = styled("div")(({ theme }) => ({

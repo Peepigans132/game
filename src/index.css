@@ -19,6 +19,20 @@ main {
   align-items: stretch;
 }
 
+
+body {
+  margin: 0;
+  background: url("https://as1.ftcdn.net/v2/jpg/03/23/88/08/1000_F_323880864_TPsH5ropjEBo1ViILJmcFHJqsBzorxUB.jpg")
+    no-repeat center center fixed; /* Set the image as the background */
+  background-size: cover; /* Ensure the image covers the entire screen */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

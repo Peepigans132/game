@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../src/AuthContext";
 import {
@@ -11,8 +11,11 @@ import {
   DialogActions,
   DialogContentText,
   TextField,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
 } from "@mui/material";
-import "../src/App.css";
 
 interface Game {
   id: number;
@@ -57,8 +60,7 @@ const allGames: Game[] = [
 const GameDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const gameIndex = allGames.findIndex((g) => g.id === Number(id));
-  const game = allGames[gameIndex];
+  const game = allGames.find((g) => g.id === Number(id));
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
@@ -66,38 +68,29 @@ const GameDetails: React.FC = () => {
   const [editedInfo, setEditedInfo] = useState(game?.info || "");
   const [header, setHeader] = useState("");
 
-  // Ref for the scrollable container
-  const scrollableContainerRef = useRef<HTMLDivElement>(null);
-
-  // Scroll to the bottom whenever header or paragraph changes
-  useEffect(() => {
-    if (scrollableContainerRef.current) {
-      scrollableContainerRef.current.scrollTop =
-        scrollableContainerRef.current.scrollHeight;
-    }
-  }, [header, editedInfo]);
-
   if (!game) {
     return (
       <Container>
-        <Typography variant="h4">Game Not Found</Typography>
+        <Typography variant="h4" color="error">
+          Game Not Found
+        </Typography>
       </Container>
     );
   }
 
   const handleEditClick = () => {
     if (!user) {
-      setLoginDialogOpen(true); // Open login dialog if the user is not logged in
+      setLoginDialogOpen(true);
     } else {
-      setEditDialogOpen(true); // Open edit dialog if the user is logged in
+      setEditDialogOpen(true);
     }
   };
 
   const handleAddHeaderClick = () => {
     if (!user) {
-      setLoginDialogOpen(true); // Open login dialog if the user is not logged in
+      setLoginDialogOpen(true);
     } else {
-      setHeaderDialogOpen(true); // Open header dialog if the user is logged in
+      setHeaderDialogOpen(true);
     }
   };
 
@@ -106,8 +99,8 @@ const GameDetails: React.FC = () => {
   };
 
   const handleSave = () => {
-    if (gameIndex !== -1) {
-      allGames[gameIndex].info = editedInfo; // Update the game info in the array
+    if (game) {
+      game.info = editedInfo; // Update the game info
     }
     setEditDialogOpen(false);
   };
@@ -117,27 +110,49 @@ const GameDetails: React.FC = () => {
   };
 
   return (
-    <div
-      className="scrollable-container"
-      ref={scrollableContainerRef} // Attach the ref to the container
-    >
-      <Container>
-        <Typography variant="h4">{game.alt}</Typography>
-        <img src={game.src} alt={game.alt} className="game-image" />
-        {header && <Typography variant="h5">{header}</Typography>}
-        <Typography>{game.info}</Typography>
-        <Button variant="contained" color="primary" onClick={handleEditClick}>
-          Edit Game Info
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleAddHeaderClick}
-          style={{ marginLeft: "10px" }}
-        >
-          Add Header
-        </Button>
-      </Container>
+    <Container sx={{ marginTop: 4 }}>
+      <Card sx={{ maxWidth: 800, margin: "0 auto", boxShadow: 3 }}>
+        <CardMedia
+          component="img"
+          height="400"
+          image={game.src}
+          alt={game.alt}
+          sx={{ objectFit: "cover" }}
+        />
+        <CardContent>
+          <Typography variant="h4" gutterBottom>
+            {game.alt}
+          </Typography>
+          {header && (
+            <Typography variant="h5" gutterBottom>
+              {header}
+            </Typography>
+          )}
+          <Typography variant="body1" paragraph>
+            {game.info}
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEditClick}
+              >
+                Edit Game Info
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleAddHeaderClick}
+              >
+                Add Header
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {/* Edit Game Info Dialog */}
       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
@@ -188,7 +203,7 @@ const GameDetails: React.FC = () => {
         <DialogTitle>You must sign in</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            You must sign in to add a header or edit the game info.
+            You must sign in to edit the game info.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -200,7 +215,7 @@ const GameDetails: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Container>
   );
 };
 
