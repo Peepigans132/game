@@ -2,13 +2,14 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface User {
   username: string;
-  isVerified: boolean; // Example property to indicate if the user is verified
+  email: string; // Add email to the user object
+  isVerified: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => boolean;
-  signup: (username: string, password: string) => boolean;
+  signup: (username: string, password: string, email: string) => boolean;
   logout: () => void;
 }
 
@@ -16,12 +17,10 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Create the AuthContext
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(() => {
-    // Load the user from localStorage on initial load
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
@@ -29,7 +28,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (username: string, password: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
     if (storedUsers[username]?.password === password) {
-      const loggedInUser = { username, isVerified: storedUsers[username].isVerified };
+      const loggedInUser = {
+        username,
+        email: storedUsers[username].email,
+        isVerified: storedUsers[username].isVerified,
+      };
       setUser(loggedInUser);
       localStorage.setItem("user", JSON.stringify(loggedInUser));
       return true;
@@ -37,18 +40,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return false;
   };
 
-  const signup = (username: string, password: string): boolean => {
+  const signup = (username: string, password: string, email: string): boolean => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "{}");
     if (storedUsers[username]) {
-      // Username already exists
-      return false;
+      return false; // Username already exists
     }
-    // Add the new user to the stored users
-    storedUsers[username] = { password, isVerified: false }; // Default isVerified to false
+    storedUsers[username] = { password, email, isVerified: false };
     localStorage.setItem("users", JSON.stringify(storedUsers));
 
-    // Automatically log the user in after signup
-    const newUser = { username, isVerified: false };
+    const newUser = { username, email, isVerified: false };
     setUser(newUser);
     localStorage.setItem("user", JSON.stringify(newUser));
     return true;
@@ -66,7 +66,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Custom hook to use the AuthContext
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

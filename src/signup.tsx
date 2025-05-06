@@ -7,6 +7,7 @@ const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -16,8 +17,7 @@ const Signup: React.FC = () => {
       setError("Passwords do not match.");
       return;
     }
-
-    const success = signup(username, password);
+    const success = signup(username, password, email); // Pass all three arguments
     if (success) {
       navigate("/"); // Redirect to the home page
     } else {
@@ -31,6 +31,13 @@ const Signup: React.FC = () => {
         Sign Up
       </Typography>
       {error && <Typography color="error">{error}</Typography>}
+      <TextField
+        label="Email"
+        fullWidth
+        margin="normal"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
       <TextField
         label="Username"
         fullWidth
